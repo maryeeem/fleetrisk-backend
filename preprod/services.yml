@@ -2,7 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: assure-api-db-service
-  namespace: preprod
 spec:
   selector:
     app: assure-api-db
@@ -10,18 +9,4 @@ spec:
   - protocol: TCP
     port: 3306
     targetPort: 3306
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: assur-api-service
-  namespace: preprod
-spec:
-  selector:
-    app: assur-api
-  ports:
-  - protocol: TCP
-    port: 5003
-    targetPort: 5003
   type: ClusterIP
