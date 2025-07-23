@@ -1,1 +1,43 @@
-
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assur-api
+  namespace: preprod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assur-api
+  template:
+    metadata:
+      labels:
+        app: assur-api
+    spec:
+      serviceAccountName: internal-app
+      containers:
+      - name: assur-api
+        image: maryeeem/assur-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5003
+        env:
+        - name: NODE_ENV
+          value: "production"
+        envFrom:
+        - secretRef:
+            name: assure-api-secrets
+        volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+      volumes:
+      - name: secrets-store
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: vault-assure-api-provider
