@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: assure-api-db
+  namespace: preprod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assure-api-db
+  template:
+    metadata:
+      labels:
+        app: assure-api-db
+    spec:
+      serviceAccountName: internal-app
+      containers:
+      - name: assure-api-db
+        image: maryeeem/fleetrisk-db:latest
+        ports:
+        - containerPort: 3306
+        envFrom:
+        - secretRef:
+            name: assure-api-db-secrets
+        volumeMounts:
+        - name: vault-secrets
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+        - name: assure-api-db-storage
+          mountPath: /var/lib/mysql
+        resources:
+          limits:
+            cpu: "300m"
+            memory: "512Mi"
+      volumes:
+      - name: vault-secrets
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: vault-assure-api-provider
+      - name: assure-api-db-storage
+        persistentVolumeClaim:
+          claimName: assure-api-db-pvc
