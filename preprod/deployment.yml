@@ -1,8 +1,7 @@
-piVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: assur-api
-  namespace: preprod
 spec:
   replicas: 1
   selector:
