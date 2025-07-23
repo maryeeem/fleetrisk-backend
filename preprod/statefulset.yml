@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: assure-api-db
-  namespace: preprod
 spec:
   replicas: 1
   selector:
