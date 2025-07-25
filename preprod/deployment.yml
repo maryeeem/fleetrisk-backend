@@ -15,7 +15,7 @@ spec:
       serviceAccountName: internal-app
       containers:
       - name: assur-api
-        image: maryeeem/assur-api:9963189
+        image: maryeeem/assur-api:69f0fff
         imagePullPolicy: Always
         ports:
         - containerPort: 5003
